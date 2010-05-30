@@ -1,0 +1,123 @@
+/* reset */
+
+html,body,div,span,ul,ol,li,dl,dd,dt,h1,h2,h3,h4,h5,h6,p,fieldset { margin: 0; padding: 0; }
+ul,ol { list-style: none; }
+img,fieldset { border: none; }
+a { outline: 0; }
+
+body { font-family: Georgia, Times, serif; }
+
+
+#board {
+  margin-left: 20px;
+  overflow: auto;
+  clear: both;
+}
+
+  #board .column {
+    margin: 5px;
+    width: 300px;
+    float: left;
+  }
+
+  #board .column .cards { padding-bottom: 20px; }
+
+.card {
+  width: 290px;
+  min-height: 50px;
+  padding: 5px;
+  margin-bottom: 10px;
+  background-color: #F8E065;
+  border: 1px solid transparent;
+
+  -moz-border-radius:    5px;
+  -webkit-border-radius: 5px;
+  border-radius:         5px;
+
+  -moz-box-shadow:    5px 5px 5px rgba(100,100,100,0.5);
+  -webkit-box-shadow: 5px 5px 5px rgba(100,100,100,0.5);
+  box-shadow:         5px 5px 5px rgba(100,100,100,0.5);
+}
+
+.card.yellow { background-color: #F8E065; }
+.card.orange { background-color: #FAA919; }
+.card.blue   { background-color: #12C2D9; }
+.card.red    { background-color: #FF5A00; }
+.card.green  { background-color: #35B44B; }
+
+.card.placeholder {
+  background-color: transparent;
+  border-style: dashed;
+  border-color: #CCCCCC;
+
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.card .text[contenteditable=true] {
+  background-color: rgba(255,255,255,0.5);
+}
+
+#addCard {
+  position: fixed;
+  top: 40px; left: -290px;
+}
+
+  #addCard .card {
+    position: absolute;
+
+    -moz-box-shadow:    2px 2px 5px rgba(100,100,100,0.5);
+    -webkit-box-shadow: 2px 2px 5px rgba(100,100,100,0.5);
+    box-shadow:         2px 2px 5px rgba(100,100,100,0.5);
+  }
+
+  #addCard .card:nth-child(5) { top:   0px; }
+  #addCard .card:nth-child(4) { top:  30px; }
+  #addCard .card:nth-child(3) { top:  60px; }
+  #addCard .card:nth-child(2) { top:  90px; }
+  #addCard .card:nth-child(1) { top: 120px; }
+
+  #addCard .card .text { 
+    font-style: italic;
+    font-size: 0.9em;
+  }
+
+/* Cards rotating CSS3 magic */
+
+.card {
+  -moz-transform: rotate(-1deg);
+  -webkit-transform: rotate(-1deg);
+}
+
+.card:nth-of-type(2n) {
+  -moz-transform: rotate(1deg);
+  -webkit-transform: rotate(1deg);
+}
+
+.column:nth-of-type(2n) .card:nth-of-type(2n) {
+  -moz-transform: rotate(2deg);
+  -webkit-transform: rotate(2deg);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
