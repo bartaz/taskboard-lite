@@ -7,6 +7,9 @@ a { outline: 0; }
 
 body { font-family: Georgia, Times, serif; }
 
+/* HTML5 blocks for Firefox */
+
+section, nav, article, aside, hgroup, header, footer { display: block }
 
 #board {
   margin-left: 20px;
@@ -64,16 +67,20 @@ body { font-family: Georgia, Times, serif; }
   box-shadow: none;
 }
 
-.card .text[contenteditable=true] {
-  background-color: rgba(255,255,255,0.5);
-}
+  .card .text {
+    cursor: text;
+  }
 
-#addCard {
+  .card .text[contenteditable=true] {
+    background-color: rgba(255,255,255,0.5);
+  }
+
+#deck {
   position: fixed;
   top: 40px; left: -290px;
 }
 
-  #addCard .card {
+  #deck .card {
     position: absolute;
 
     -moz-box-shadow:    2px 2px 5px rgba(100,100,100,0.5);
@@ -81,13 +88,13 @@ body { font-family: Georgia, Times, serif; }
     box-shadow:         2px 2px 5px rgba(100,100,100,0.5);
   }
 
-  #addCard .card:nth-child(5) { top:   0px; }
-  #addCard .card:nth-child(4) { top:  30px; }
-  #addCard .card:nth-child(3) { top:  60px; }
-  #addCard .card:nth-child(2) { top:  90px; }
-  #addCard .card:nth-child(1) { top: 120px; }
+  #deck .card:nth-child(5) { top:   0px; }
+  #deck .card:nth-child(4) { top:  30px; }
+  #deck .card:nth-child(3) { top:  60px; }
+  #deck .card:nth-child(2) { top:  90px; }
+  #deck .card:nth-child(1) { top: 120px; }
 
-  #addCard .card .text { 
+  #deck .card .text { 
     font-style: italic;
     font-size: 0.9em;
   }

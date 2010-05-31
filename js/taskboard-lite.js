@@ -52,7 +52,7 @@ TASKBOARD.init.editing = function () {
 TASKBOARD.init.adding = function () {
 
   var colors = ['green', 'blue', 'red', 'orange', 'yellow'];
-  var $deck = $("<ul id='addCard' class='column'></ul>").appendTo('body');
+  var $deck = $("<aside id='deck' class='column'></aside>").appendTo('body');
 
   $.each(colors, function (i, color) {
     var $card = $(TASKBOARD.templates.card)
@@ -81,7 +81,7 @@ TASKBOARD.init.adding = function () {
   $("#board .cards").bind("sortbeforestop", function(ev, ui) {
     if (ui.item.hasClass('new')) {
       ui.item.removeClass('new')
-        .find(".text").html("<em>Double-click to edit</em>");
+        .find(".text").html("<p><em>Double-click to edit</em></p>");
     }
   });
 
@@ -90,7 +90,7 @@ TASKBOARD.init.adding = function () {
 
 TASKBOARD.templates = {};
 
-TASKBOARD.templates.card = "<li class='card'><div class='text'></div></li>";
+TASKBOARD.templates.card = "<section class='card'><div class='text'></div></section>";
 
 /**
  * UTILS
