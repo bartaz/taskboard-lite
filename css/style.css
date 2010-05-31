@@ -30,6 +30,9 @@ body { font-family: Georgia, Times, serif; }
   background-color: #F8E065;
   border: 1px solid transparent;
 
+  cursor: url(grab.cur);
+  cursor: -moz-grab;
+
   -moz-border-radius:    5px;
   -webkit-border-radius: 5px;
   border-radius:         5px;
@@ -37,6 +40,12 @@ body { font-family: Georgia, Times, serif; }
   -moz-box-shadow:    5px 5px 5px rgba(100,100,100,0.5);
   -webkit-box-shadow: 5px 5px 5px rgba(100,100,100,0.5);
   box-shadow:         5px 5px 5px rgba(100,100,100,0.5);
+}
+
+.card.ui-sortable-helper,
+.card.ui-draggable-dragging {
+  cursor: url(grabbing.cur);
+  cursor: -moz-grabbing;
 }
 
 .card.yellow { background-color: #F8E065; }

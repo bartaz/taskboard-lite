@@ -21,7 +21,6 @@ TASKBOARD.init.sorting = function () {
     .equalHeight()
     .sortable({ 
       tolerance: 'pointer',
-      cursor: 'move',
       placeholder: 'placeholder card',
       forcePlaceholderSize: true,
       connectWith: '.column .cards',
@@ -61,7 +60,6 @@ TASKBOARD.init.adding = function () {
       .addClass("new " + color)
       .css({ left: '-40px' })
       .draggable({ 
-        cursor: 'move',
         addClasses: false,
         connectToSortable: '#board .cards',
         helper: function(event) {
