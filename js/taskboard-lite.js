@@ -11,6 +11,7 @@ TASKBOARD.init = function () {
   TASKBOARD.init.sorting();
   TASKBOARD.init.editing();
   TASKBOARD.init.adding();
+  TASKBOARD.init.tagging();
 
 }
 
@@ -25,7 +26,6 @@ TASKBOARD.init.sorting = function () {
       forcePlaceholderSize: true,
       connectWith: '#board .column',
       change: function(){ $sortables.equalHeight(); },
-
     });
 
 }
@@ -36,13 +36,17 @@ TASKBOARD.init.editing = function () {
     .delegate('.card', 'dblclick', function(){
       var $this = $(this),
           $text = $this.find(".text");
+      $("#board").removeClass("highlighted")
+        .find(".highlighted, .clicked").removeClass("highlighted clicked");  // #tags
       $("#board .column").sortable("disable"); // sortable breaks contenteditable in Firefox
+      $text.html(function(i, html){ return TASKBOARD.tags.unmarkTags(html); }); // #tags
       $text[0].contentEditable = "true";
       $text.focus();
     })
     .delegate('.card .text', 'focusout', function(){
       if (this.contentEditable === "true") {
         this.contentEditable = "false";
+        $(this).html(function(i, html){ return TASKBOARD.tags.markTags(html); }); // #tags
         $("#board .column").sortable("enable");
       }
     });
@@ -65,10 +69,15 @@ TASKBOARD.init.adding = function () {
         helper: function(event) {
           return $(event.target).closest(".card").clone() },
         start: function() { $(this).hide(); },
-        stop: function() { $(this).css({ left: '-40px' }).show().animate({ left: '0' }, 'normal', 'easeOutBack'); }
+        stop: function() {
+          var $this = $(this);
+          setTimeout(function () {
+            $this.css({ left: '-40px' }).show().animate({ left: '0' }, 'normal', 'easeOutBack');
+          }, 750);
+        }
       })
       .bind('mouseenter mouseleave', function (ev){
-        $(this).stop().animate({ left: (ev.type == 'mouseenter') ? '10px' : '0' }, 'normal', 'easeOutBack');
+        $(this).stop().animate({ left: (ev.type == 'mouseenter') ? '20px' : '0' }, 'normal', 'easeOutBack');
       });
 
       setTimeout(function(){
@@ -81,10 +90,55 @@ TASKBOARD.init.adding = function () {
   $("#board .column").bind("sortbeforestop", function(ev, ui) {
     if (ui.item.hasClass('new')) {
       ui.item.removeClass('new')
-        .find(".text").html("<p><em>Double-click to edit</em></p>");
+        .find(".text").html("<p><em>Double-click to edit</em> <span class='tag'>#new</span></p>");
     }
   });
 
+}
+
+/* Tags */
+
+TASKBOARD.tags = {};
+
+TASKBOARD.tags.markTags = function (text) {
+  /* turn #tags into nice spans */
+  return text.replace(/(\s|^)(#\w*)\b/gi, "$1<span class='tag'>$2</span>");
+}
+
+TASKBOARD.tags.unmarkTags = function (text) {
+  return text.replace(/<span\sclass=['"]tag['"]\s*>(#\w*)<\/span>/gi, "$1");
+}
+
+TASKBOARD.init.tagging = function () {
+
+  $("#board")
+    .delegate('.tag', 'hover', function(ev){
+      var enter = /^mouse(enter|over)/i.test(ev.type),
+          $this = $(this),
+          $tags = $("#board .tag").filter(function () {
+            return $(this).text().toLowerCase() == $this.text().toLowerCase();
+          });
+      if (!$this.hasClass("clicked")) {
+        $tags.toggleClass("highlighted", enter);
+      }
+    })
+
+    .delegate('.tag', 'click', function(ev){
+      var $this = $(this),
+          $tags = $("#board .tag").filter(function () {
+            return $(this).text().toLowerCase() == $this.text().toLowerCase();
+          });
+      $tags.toggleClass("clicked");
+      if ($this.hasClass("clicked")) {
+        $tags.closest(".card").add("#board").addClass("highlighted");
+      } else {
+        $tags.closest(".card").add("#board").not(':has(.clicked)').removeClass("highlighted");
+      }
+    })
+
+  $("#board .column").bind("sortbeforestop", function(ev, ui) {
+    ui.item.css({position:"", left: "", right: "", top: "", bottom: ""});
+  });;
 }
 
 

@@ -79,13 +79,48 @@ section, nav, article, aside, hgroup, header, footer { display: block }
   box-shadow: none;
 }
 
-  .card .text {
-    cursor: text;
-  }
-
+  .card .text { cursor: text; }
   .card .text[contenteditable=true] {
     background-color: rgba(255,255,255,0.5);
   }
+
+/* Tags */
+
+  .card .tag {
+    background-color: rgba(255,255,255,0.4);
+    padding: 0.1em 0.3em 0.1em 0.2em;
+    cursor: pointer;
+
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+
+    -webkit-box-shadow: 1px 1px 1px rgba(100,100,100,0.5);
+  }
+
+  .card .tag.highlighted {
+    background-color: rgba(255,255,255,0.8);
+  }
+
+  .card .tag.clicked {
+    background-color: rgba(255,255,255,0.9);
+    -moz-box-shadow: inset 1px 1px 1px rgba(100,100,100,0.5);
+    -webkit-box-shadow: none; /* inset 1px 1px 1px rgba(100,100,100,0.5); looks like shit in Chrome */
+    box-shadow: inset 1px 1px 1px rgba(100,100,100,0.5);
+  }
+
+#board.highlighted .card { opacity: 0.3 }
+
+#board.highlighted .card.highlighted {
+  opacity: 1;
+  position: relative;
+  top: -3px; left: -3px; 
+  -moz-box-shadow: 8px 8px 5px rgba(100,100,100,0.3);
+  -webkit-box-shadow: 8px 8px 5px rgba(100,100,100,0.3);
+  box-shadow: 8px 8px 5px rgba(100,100,100,0.3);
+}
+
+/* Deck with new cards */
 
 #deck {
   position: fixed;
@@ -136,25 +171,4 @@ section, nav, article, aside, hgroup, header, footer { display: block }
   -moz-transform: rotate(2deg);
   -webkit-transform: rotate(2deg);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
