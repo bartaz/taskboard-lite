@@ -16,14 +16,14 @@ TASKBOARD.init = function () {
 
 TASKBOARD.init.sorting = function () {
 
-  var $sortables = $("#board .cards");
+  var $sortables = $("#board .column");
   $sortables
     .equalHeight()
     .sortable({ 
       tolerance: 'pointer',
       placeholder: 'placeholder card',
       forcePlaceholderSize: true,
-      connectWith: '.column .cards',
+      connectWith: '#board .column',
       change: function(){ $sortables.equalHeight(); },
 
     });
@@ -36,14 +36,14 @@ TASKBOARD.init.editing = function () {
     .delegate('.card', 'dblclick', function(){
       var $this = $(this),
           $text = $this.find(".text");
-      $("#board .cards").sortable("disable"); // sortable breaks contenteditable in Firefox
+      $("#board .column").sortable("disable"); // sortable breaks contenteditable in Firefox
       $text[0].contentEditable = "true";
       $text.focus();
     })
     .delegate('.card .text', 'focusout', function(){
       if (this.contentEditable === "true") {
         this.contentEditable = "false";
-        $("#board .cards").sortable("enable");
+        $("#board .column").sortable("enable");
       }
     });
 
@@ -51,7 +51,7 @@ TASKBOARD.init.editing = function () {
 
 TASKBOARD.init.adding = function () {
 
-  var colors = ['green', 'blue', 'red', 'orange', 'yellow'];
+  var colors = ['transparent', 'green', 'blue', 'red', 'orange', 'yellow'];
   var $deck = $("<aside id='deck' class='column'></aside>").appendTo('body');
 
   $.each(colors, function (i, color) {
@@ -61,7 +61,7 @@ TASKBOARD.init.adding = function () {
       .css({ left: '-40px' })
       .draggable({ 
         addClasses: false,
-        connectToSortable: '#board .cards',
+        connectToSortable: '#board .column',
         helper: function(event) {
           return $(event.target).closest(".card").clone() },
         start: function() { $(this).hide(); },
@@ -78,7 +78,7 @@ TASKBOARD.init.adding = function () {
   });
 
 
-  $("#board .cards").bind("sortbeforestop", function(ev, ui) {
+  $("#board .column").bind("sortbeforestop", function(ev, ui) {
     if (ui.item.hasClass('new')) {
       ui.item.removeClass('new')
         .find(".text").html("<p><em>Double-click to edit</em></p>");
