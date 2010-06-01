@@ -109,6 +109,10 @@ section, nav, article, aside, hgroup, header, footer { display: block }
     box-shadow: inset 1px 1px 1px rgba(100,100,100,0.5);
   }
 
+  .card.transparent .tag             { background-color: rgba(235,235,235,0.4); }
+  .card.transparent .tag.highlighted { background-color: rgba(235,235,235,0.8); }
+  .card.transparent .tag.clicked     { background-color: rgba(235,235,235,0.9); }
+
 #board.highlighted .card { opacity: 0.3 }
 
 #board.highlighted .card.highlighted {
