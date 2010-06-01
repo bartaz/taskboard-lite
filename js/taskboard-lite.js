@@ -1,19 +1,24 @@
 (function($) {
 
-var TASKBOARD = {};
+var TASKBOARD = {}
 
 $(document).ready(function(){
   TASKBOARD.init();
 });
 
 TASKBOARD.init = function () {
-
-  TASKBOARD.init.sorting();
-  TASKBOARD.init.editing();
-  TASKBOARD.init.adding();
-  TASKBOARD.init.tagging();
-
+  var functions = TASKBOARD.init.initializers,
+      i = 0;
+  for (i = 0; i < functions.length; i++) {
+    if ($.isFunction(functions[i])) {
+      functions[i].apply(this);
+    }
+  }
 };
+
+TASKBOARD.init.initializers = [];
+
+/* Sorting cards */
 
 TASKBOARD.init.sorting = function () {
 
@@ -29,6 +34,10 @@ TASKBOARD.init.sorting = function () {
     });
 
 };
+
+TASKBOARD.init.initializers.push( TASKBOARD.init.sorting );
+
+/* Editing cards */
 
 TASKBOARD.init.editing = function () {
 
@@ -52,6 +61,10 @@ TASKBOARD.init.editing = function () {
     });
 
 };
+
+TASKBOARD.init.initializers.push( TASKBOARD.init.editing );
+
+/* Adding new cards */
 
 TASKBOARD.init.adding = function () {
 
@@ -96,7 +109,9 @@ TASKBOARD.init.adding = function () {
 
 };
 
-/* Tags */
+TASKBOARD.init.initializers.push(TASKBOARD.init.adding );
+
+/* Tagging cards */
 
 TASKBOARD.tags = {};
 
@@ -141,6 +156,9 @@ TASKBOARD.init.tagging = function () {
   });
 };
 
+TASKBOARD.init.initializers.push(TASKBOARD.init.tagging );
+
+/* Templates */
 
 TASKBOARD.templates = {};
 
