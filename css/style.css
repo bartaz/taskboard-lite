@@ -47,6 +47,7 @@ section, nav, article, aside, hgroup, header, footer { display: block }
 .card.ui-sortable-helper,
 .card.ui-draggable-dragging {
   cursor: url(grabbing.cur);
+  cursor: move;
   cursor: -moz-grabbing;
 }
 
