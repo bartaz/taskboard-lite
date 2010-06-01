@@ -1,10 +1,10 @@
 (function($) {
 
+var TASKBOARD = {};
+
 $(document).ready(function(){
   TASKBOARD.init();
 });
-
-var TASKBOARD = window.TASKBOARD = {};
 
 TASKBOARD.init = function () {
 
@@ -13,7 +13,7 @@ TASKBOARD.init = function () {
   TASKBOARD.init.adding();
   TASKBOARD.init.tagging();
 
-}
+};
 
 TASKBOARD.init.sorting = function () {
 
@@ -25,10 +25,10 @@ TASKBOARD.init.sorting = function () {
       placeholder: 'placeholder card',
       forcePlaceholderSize: true,
       connectWith: '#board .column',
-      change: function(){ $sortables.equalHeight(); },
+      change: function(){ $sortables.equalHeight(); }
     });
 
-}
+};
 
 TASKBOARD.init.editing = function () {
 
@@ -55,8 +55,8 @@ TASKBOARD.init.editing = function () {
 
 TASKBOARD.init.adding = function () {
 
-  var colors = ['transparent', 'green', 'blue', 'red', 'orange', 'yellow'];
-  var $deck = $("<aside id='deck' class='column'></aside>").appendTo('body');
+  var colors = ['transparent', 'green', 'blue', 'red', 'orange', 'yellow'],
+      $deck = $("<aside id='deck' class='column'></aside>").appendTo('body');
 
   $.each(colors, function (i, color) {
     var $card = $(TASKBOARD.templates.card)
@@ -67,7 +67,7 @@ TASKBOARD.init.adding = function () {
         addClasses: false,
         connectToSortable: '#board .column',
         helper: function(event) {
-          return $(event.target).closest(".card").clone() },
+          return $(event.target).closest(".card").clone(); },
         start: function() { $(this).hide(); },
         stop: function() {
           var $this = $(this);
@@ -77,12 +77,12 @@ TASKBOARD.init.adding = function () {
         }
       })
       .bind('mouseenter mouseleave', function (ev){
-        $(this).stop().animate({ left: (ev.type == 'mouseenter') ? '20px' : '0' }, 'normal', 'easeOutBack');
+        $(this).stop().animate({ left: (ev.type === 'mouseenter') ? '20px' : '0' }, 'normal', 'easeOutBack');
       });
 
       setTimeout(function(){
         $card.animate({ left: '0' }, 'normal', 'easeOutBack');
-      }, (colors.length - i) * 100)
+      }, (colors.length - i) * 100);
 
   });
 
@@ -94,7 +94,7 @@ TASKBOARD.init.adding = function () {
     }
   });
 
-}
+};
 
 /* Tags */
 
@@ -102,12 +102,12 @@ TASKBOARD.tags = {};
 
 TASKBOARD.tags.markTags = function (text) {
   /* turn #tags into nice spans */
-  return text.replace(/(\s|^)(#\w*)\b/gi, "$1<span class='tag'>$2</span>");
-}
+  return text.replace(/(\s|^|>)(#\w*)\b/gi, "$1<span class='tag'>$2</span>");
+};
 
 TASKBOARD.tags.unmarkTags = function (text) {
   return text.replace(/<span\sclass=['"]tag['"]\s*>(#\w*)<\/span>/gi, "$1");
-}
+};
 
 TASKBOARD.init.tagging = function () {
 
@@ -116,7 +116,7 @@ TASKBOARD.init.tagging = function () {
       var enter = /^mouse(enter|over)/i.test(ev.type),
           $this = $(this),
           $tags = $("#board .tag").filter(function () {
-            return $(this).text().toLowerCase() == $this.text().toLowerCase();
+            return $(this).text().toLowerCase() === $this.text().toLowerCase();
           });
       if (!$this.hasClass("clicked")) {
         $tags.toggleClass("highlighted", enter);
@@ -126,7 +126,7 @@ TASKBOARD.init.tagging = function () {
     .delegate('.tag', 'click', function(ev){
       var $this = $(this),
           $tags = $("#board .tag").filter(function () {
-            return $(this).text().toLowerCase() == $this.text().toLowerCase();
+            return $(this).text().toLowerCase() === $this.text().toLowerCase();
           });
       $tags.toggleClass("clicked");
       if ($this.hasClass("clicked")) {
@@ -134,12 +134,12 @@ TASKBOARD.init.tagging = function () {
       } else {
         $tags.closest(".card").add("#board").not(':has(.clicked)').removeClass("highlighted");
       }
-    })
+    });
 
   $("#board .column").bind("sortbeforestop", function(ev, ui) {
     ui.item.css({position:"", left: "", right: "", top: "", bottom: ""});
-  });;
-}
+  });
+};
 
 
 TASKBOARD.templates = {};
@@ -161,16 +161,16 @@ TASKBOARD.templates.card = "<section class='card'><div class='text'></div></sect
  */
 $.fn.equalHeight = function(options){
     var settings = {
-        offset : 0,
-        css    : "min-height"
-    };
+          offset : 0,
+          css    : "min-height"
+        },
+        maxHeight = 0,
+        height;
 
     if(options) {
         $.extend(settings, options);
     }
 
-    var maxHeight = 0;
-    var height;
     this.css(settings.css, "").each(function(i, el){
         height = $(el).height();
         if(maxHeight < height){
@@ -180,4 +180,4 @@ $.fn.equalHeight = function(options){
     return this.css(settings.css, maxHeight + settings.offset);
 };
 
-})(jQuery);
+}(jQuery));
