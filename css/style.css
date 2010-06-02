@@ -18,7 +18,7 @@ section, nav, article, aside, hgroup, header, footer { display: block }
 }
 
   #board .column {
-    margin: 5px;
+    padding: 5px;
     width: 300px;
     float: left;
     padding-bottom: 20px;
@@ -32,8 +32,7 @@ section, nav, article, aside, hgroup, header, footer { display: block }
   background-color: #F8E065;
   border: 1px solid transparent;
 
-  cursor: url(grab.cur);
-  cursor: -moz-grab;
+
 
   -moz-border-radius:    5px;
   -webkit-border-radius: 5px;
@@ -44,8 +43,13 @@ section, nav, article, aside, hgroup, header, footer { display: block }
   box-shadow:         5px 5px 5px rgba(100,100,100,0.5);
 }
 
-.card.ui-sortable-helper,
-.card.ui-draggable-dragging {
+.sortable .card {
+  cursor: url(grab.cur);
+  cursor: -moz-grab;
+}
+
+.sortable .card.ui-sortable-helper,
+.sortable .card.ui-draggable-dragging {
   cursor: url(grabbing.cur);
   cursor: move;
   cursor: -moz-grabbing;

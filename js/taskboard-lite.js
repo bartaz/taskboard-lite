@@ -1,6 +1,7 @@
 (function($) {
 
-var TASKBOARD = {}
+var TASKBOARD = {},
+    $board = $("#board");
 
 $(document).ready(function(){
   TASKBOARD.init();
@@ -22,16 +23,17 @@ TASKBOARD.init.initializers = [];
 
 TASKBOARD.init.sorting = function () {
 
-  var $sortables = $("#board .column");
-  $sortables
-    .equalHeight()
-    .sortable({ 
-      tolerance: 'pointer',
-      placeholder: 'placeholder card',
-      forcePlaceholderSize: true,
-      connectWith: '#board .column',
-      change: function(){ $sortables.equalHeight(); }
-    });
+  var options = {
+        tolerance: 'pointer',
+        placeholder: 'placeholder card',
+        connectWith: '#board .column',
+        start: function () { $board.addClass("sorting"); },
+        stop: function () { $board.removeClass("sorting"); },
+        over: function () { $board.find(".column").equalHeight(); }
+      };
+
+  $board.addClass("sortable")
+    .find(".column").equalHeight().sortable(options);
 
 };
 
@@ -41,24 +43,26 @@ TASKBOARD.init.initializers.push( TASKBOARD.init.sorting );
 
 TASKBOARD.init.editing = function () {
 
-  $("#board")
-    .delegate('.card', 'dblclick', function(){
-      var $this = $(this),
-          $text = $this.find(".text");
-      $("#board").removeClass("highlighted")
-        .find(".highlighted, .clicked").removeClass("highlighted clicked");  // #tags
-      $("#board .column").sortable("disable"); // sortable breaks contenteditable in Firefox
-      $text.html(function(i, html){ return TASKBOARD.tags.unmarkTags(html); }); // #tags
-      $text[0].contentEditable = "true";
-      $text.focus();
+  $board
+    .delegate('.card .text', 'dblclick', function(){
+      var $this = $(this);
+      if (this.contentEditable !== "true") {
+        $this.trigger("cardeditstart").attr("contentEditable", "true").focus();
+      }
     })
     .delegate('.card .text', 'focusout', function(){
+      var $this = $(this);
       if (this.contentEditable === "true") {
-        this.contentEditable = "false";
-        $(this).html(function(i, html){ return TASKBOARD.tags.markTags(html); }); // #tags
-        $("#board .column").sortable("enable");
+        $this.attr("contentEditable", "inherit").trigger("cardeditstop");
       }
     });
+
+  // disable sorting while editing to prevent problems with selecting text and stuff
+  $board.find(".column").bind("cardeditstart cardeditstop", function (ev) {
+    var enable = (ev.type === "cardeditstop");
+    $board.toggleClass("sortable", enable)
+      .find(".column").sortable(enable ? "enable" : "disable");
+  });
 
 };
 
@@ -69,7 +73,7 @@ TASKBOARD.init.initializers.push( TASKBOARD.init.editing );
 TASKBOARD.init.adding = function () {
 
   var colors = ['transparent', 'green', 'blue', 'red', 'orange', 'yellow'],
-      $deck = $("<aside id='deck' class='column'></aside>").appendTo('body');
+      $deck = $("<aside id='deck' class='sortable column'></aside>").appendTo('body');
 
   $.each(colors, function (i, color) {
     var $card = $(TASKBOARD.templates.card)
@@ -100,7 +104,7 @@ TASKBOARD.init.adding = function () {
   });
 
 
-  $("#board .column").bind("sortbeforestop", function(ev, ui) {
+  $board.find(".column").bind("sortbeforestop", function(ev, ui) {
     if (ui.item.hasClass('new')) {
       ui.item.removeClass('new')
         .find(".text").html("<p><em>Double-click to edit</em> <span class='tag'>#new</span></p>");
@@ -126,33 +130,42 @@ TASKBOARD.tags.unmarkTags = function (text) {
 
 TASKBOARD.init.tagging = function () {
 
-  $("#board")
+  $board
     .delegate('.tag', 'hover', function(ev){
       var enter = /^mouse(enter|over)/i.test(ev.type),
           $this = $(this),
-          $tags = $("#board .tag").filter(function () {
+          $tags = $board.find(".tag").filter(function () {
             return $(this).text().toLowerCase() === $this.text().toLowerCase();
           });
       if (!$this.hasClass("clicked")) {
         $tags.toggleClass("highlighted", enter);
       }
     })
-
     .delegate('.tag', 'click', function(ev){
       var $this = $(this),
-          $tags = $("#board .tag").filter(function () {
+          $tags = $board.find(".tag").filter(function () {
             return $(this).text().toLowerCase() === $this.text().toLowerCase();
           });
       $tags.toggleClass("clicked");
       if ($this.hasClass("clicked")) {
-        $tags.closest(".card").add("#board").addClass("highlighted");
+        $tags.closest(".card").add($board).addClass("highlighted");
       } else {
-        $tags.closest(".card").add("#board").not(':has(.clicked)').removeClass("highlighted");
+        $tags.closest(".card").add($board).not(':has(.clicked)').removeClass("highlighted");
+      }
+    })
+    .bind({
+      "cardeditstart": function(ev) {
+       $board.removeClass("highlighted")
+          .find(".highlighted, .clicked").removeClass("highlighted clicked");
+        $(ev.target).html(function(i, html){ return TASKBOARD.tags.unmarkTags(html); });
+      },
+      "cardeditstop": function(ev) {
+        $(ev.target).html(function(i, html){ return TASKBOARD.tags.markTags(html); });
       }
     });
 
-  $("#board .column").bind("sortbeforestop", function(ev, ui) {
-    ui.item.css({position:"", left: "", right: "", top: "", bottom: ""});
+  $board.find(".column").bind("sortbeforestop", function(ev, ui) {
+    ui.item.css({ position:"", left: "", right: "", top: "", bottom: "" });
   });
 };
 
