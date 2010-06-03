@@ -13,7 +13,7 @@ section, nav, article, aside, hgroup, header, footer { display: block }
 
 #board {
   margin-left: 20px;
-  overflow: auto;
+  overflow: hidden;
   clear: both;
 }
 

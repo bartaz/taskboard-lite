@@ -21,6 +21,15 @@ TASKBOARD.init.initializers = [];
 
 /* Sorting cards */
 
+$board.columns = function () {
+  return this.find(".column");
+};
+
+$board.updateSize = function () {
+  return this.width( this.columns().equalHeight().sumWidth() );
+};
+
+
 TASKBOARD.init.sorting = function () {
 
   var options = {
@@ -34,11 +43,25 @@ TASKBOARD.init.sorting = function () {
       "sortstart sortstop": function (ev) {
         $board.toggleClass("sorting", ev.type === "sortstart");
       },
-      "sortover": function () {
-        $board.find(".column").equalHeight();
+      "sortover": function () { $board.columns().equalHeight(); },
+      "sortstop": function () {
+        var $columns = $board.columns();
+        if ( $columns.last().find(".card").length > 0 ) {
+          // if dropped card on a last column than add a new one
+          $(TASKBOARD.templates.column).sortable(options).appendTo($board);
+        } else {
+          // remove any empty columns from the end (except one)
+          while ($columns.eq(-2).find(".card").length == 0) {
+            $columns.last().remove();
+            $columns = $columns.slice(1, -1);
+          }
+        }
+        $board.updateSize();
       }
     })
-    .find(".column").equalHeight().sortable(options);
+    .append(TASKBOARD.templates.column)
+    .updateSize()
+    .columns().sortable(options);
 
 };
 
@@ -66,7 +89,7 @@ TASKBOARD.init.editing = function () {
   $board.bind("cardeditstart cardeditstop", function (ev) {
     var enable = (ev.type === "cardeditstop");
     $board.toggleClass("sortable", enable)
-      .find(".column").sortable(enable ? "enable" : "disable");
+      .columns().sortable(enable ? "enable" : "disable");
   });
 
 };
@@ -180,6 +203,8 @@ TASKBOARD.templates = {};
 
 TASKBOARD.templates.card = "<section class='card'><div class='text'></div></section>";
 
+TASKBOARD.templates.column = "<section class='column'></section>";
+
 /**
  * UTILS
  * ========
@@ -214,4 +239,12 @@ $.fn.equalHeight = function(options){
     return this.css(settings.css, maxHeight + settings.offset);
 };
 
+/*
+ * Returns sumarized width (outer width with margins) of all elements.
+ */
+$.fn.sumWidth = function(){
+    var sum = 0;
+    this.each(function(){ sum += $(this).outerWidth(true); });
+    return sum;
+};
 }(jQuery));
