@@ -113,7 +113,12 @@ TASKBOARD.init.adding = function () {
         connectToSortable: '#board .column',
         helper: function(event) {
           return $(event.target).closest(".card").clone(); },
-        start: function() { $(this).hide(); },
+        start: function() {
+          $(this).hide();
+          $board
+            .trigger("sortstart")
+            .one("sort", function() { $board.updateSize(); });
+        },
         stop: function() {
           var $this = $(this);
           setTimeout(function () {
