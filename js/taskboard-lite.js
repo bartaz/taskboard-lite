@@ -26,13 +26,18 @@ TASKBOARD.init.sorting = function () {
   var options = {
         tolerance: 'pointer',
         placeholder: 'placeholder card',
-        connectWith: '#board .column',
-        start: function () { $board.addClass("sorting"); },
-        stop: function () { $board.removeClass("sorting"); },
-        over: function () { $board.find(".column").equalHeight(); }
+        connectWith: '#board .column'
       };
 
   $board.addClass("sortable")
+    .bind({
+      "sortstart sortstop": function (ev) {
+        $board.toggleClass("sorting", ev.type === "sortstart");
+      },
+      "sortover": function () {
+        $board.find(".column").equalHeight();
+      }
+    })
     .find(".column").equalHeight().sortable(options);
 
 };
@@ -58,7 +63,7 @@ TASKBOARD.init.editing = function () {
     });
 
   // disable sorting while editing to prevent problems with selecting text and stuff
-  $board.find(".column").bind("cardeditstart cardeditstop", function (ev) {
+  $board.bind("cardeditstart cardeditstop", function (ev) {
     var enable = (ev.type === "cardeditstop");
     $board.toggleClass("sortable", enable)
       .find(".column").sortable(enable ? "enable" : "disable");
@@ -100,11 +105,9 @@ TASKBOARD.init.adding = function () {
       setTimeout(function(){
         $card.animate({ left: '0' }, 'normal', 'easeOutBack');
       }, (colors.length - i) * 100);
-
   });
 
-
-  $board.find(".column").bind("sortbeforestop", function(ev, ui) {
+  $board.bind("sortbeforestop", function(ev, ui) {
     if (ui.item.hasClass('new')) {
       ui.item.removeClass('new')
         .find(".text").html("<p><em>Double-click to edit</em> <span class='tag'>#new</span></p>");
@@ -161,12 +164,12 @@ TASKBOARD.init.tagging = function () {
       },
       "cardeditstop": function(ev) {
         $(ev.target).html(function(i, html){ return TASKBOARD.tags.markTags(html); });
+      },
+      "sortbeforestop": function(ev, ui) {
+        ui.item.css({ position:"", left: "", right: "", top: "", bottom: "" });
       }
     });
 
-  $board.find(".column").bind("sortbeforestop", function(ev, ui) {
-    ui.item.css({ position:"", left: "", right: "", top: "", bottom: "" });
-  });
 };
 
 TASKBOARD.init.initializers.push(TASKBOARD.init.tagging );
