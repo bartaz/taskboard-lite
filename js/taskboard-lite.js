@@ -19,6 +19,26 @@ TASKBOARD.init = function () {
 
 TASKBOARD.init.initializers = [];
 
+/* Building board */
+
+TASKBOARD.build = function () {
+
+  var data = TASKBOARD.data.dummy; // later get some real data
+
+  $board.empty();
+  $.each(data.columns, function (i, column) {
+    var $column = $(TASKBOARD.templates.column).appendTo($board);
+    $.each(column.cards, function (i, card) {
+      var $card = $(TASKBOARD.templates.card).appendTo($column).addClass(card.type).find(".text").html(card.text);
+    });
+  });
+}
+
+TASKBOARD.init.initializers.push( TASKBOARD.build );
+
+
+
+
 /* Sorting cards */
 
 $board.columns = function () {
@@ -196,19 +216,81 @@ TASKBOARD.init.tagging = function () {
       "sortbeforestop": function(ev, ui) {
         ui.item.css({ position:"", left: "", right: "", top: "", bottom: "" });
       }
-    });
-
+    })
+    .find(".card").trigger("cardeditstop");
 };
 
 TASKBOARD.init.initializers.push(TASKBOARD.init.tagging );
 
 /* Templates */
 
-TASKBOARD.templates = {};
+TASKBOARD.templates = {
+  board: "<section id='board'></section>",
 
-TASKBOARD.templates.card = "<section class='card'><div class='text'></div></section>";
+  column: "<section class='column'></section>",
 
-TASKBOARD.templates.column = "<section class='column'></section>";
+  card: "<section class='card'><div class='text'></div></section>"
+};
+
+
+
+/* Data */
+
+TASKBOARD.data = {};
+
+TASKBOARD.data.dummy = {
+  columns: [
+    {
+      cards: [
+        {
+          type: "transparent",
+          text: "<h2>To Do</h2>"
+        },
+        {
+          type: "green",
+          text: "<p>Removing #cards</p>"
+        }
+      ]
+    },
+    {
+      cards: [
+        {
+          type: "transparent",
+          text: "<h2>In Progress</h2>"
+        },
+        {
+          type: "orange",
+          text: "<p>Storing #board data</p>"
+        },
+        {
+          type: "green",
+          text: "<p>Editing #cards text</p>"
+        }
+      ]
+    },
+    {
+      cards: [
+        {
+          type: "transparent",
+          text: "<h2>Done</h2>"
+        },
+        {
+          type: "yellow",
+          text: "<p>Adding #columns</p>"
+        },
+        {
+          type: "green",
+          text: "<p>Adding #tags to #cards</p>"
+        },
+        {
+          type: "green",
+          text: "<p>Sorting #cards</p>"
+        }
+      ]
+    }
+  ]
+
+}
 
 /**
  * UTILS
