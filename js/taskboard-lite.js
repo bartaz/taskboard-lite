@@ -21,31 +21,32 @@ TASKBOARD.init.initializers = [];
 
 /* Building board */
 
-TASKBOARD.build = function () {
+TASKBOARD.build = function (data) {
 
-  var data = TASKBOARD.data.dummy; // later get some real data
+  data = data || TASKBOARD.data.load(); // later get some real data
 
   $board.empty();
   $.each(data.columns, function (i, column) {
     var $column = $(TASKBOARD.templates.column).appendTo($board);
     $.each(column.cards, function (i, card) {
-      var $card = $(TASKBOARD.templates.card).appendTo($column).addClass(card.type).find(".text").html(card.text);
+      $(TASKBOARD.templates.card)
+        .appendTo($column).addClass(card.type)
+        .find(".text")
+          .formatCardText(card.text);
     });
   });
-}
+};
 
 TASKBOARD.init.initializers.push( TASKBOARD.build );
 
 
-
-
 /* Sorting cards */
 
-$board.columns = function () {
+$.fn.columns = function () {
   return this.find(".column");
 };
 
-$board.updateSize = function () {
+$.fn.updateSize = function () {
   return this.width( this.columns().equalHeight().sumWidth() );
 };
 
@@ -77,6 +78,7 @@ TASKBOARD.init.sorting = function () {
           }
         }
         $board.updateSize();
+        TASKBOARD.data.save();
       }
     })
     .append(TASKBOARD.templates.column)
@@ -89,19 +91,35 @@ TASKBOARD.init.initializers.push( TASKBOARD.init.sorting );
 
 /* Editing cards */
 
+$.fn.formatCardText = function (text) {
+  return this.data("value", text).html(TASKBOARD.formatCardText(text));
+};
+
+// override this function to provide some formatting
+TASKBOARD.formatCardText = function (text) { return text; };
+
 TASKBOARD.init.editing = function () {
 
   $board
     .delegate('.card .text', 'dblclick', function(){
       var $this = $(this);
       if (this.contentEditable !== "true") {
-        $this.trigger("cardeditstart").attr("contentEditable", "true").focus();
+        $this
+          .trigger("cardeditstart")
+          .html($this.data("value"))
+          .attr("contentEditable", "true")
+          .focus();
       }
     })
     .delegate('.card .text', 'focusout', function(){
-      var $this = $(this);
+      var $this = $(this), value;
       if (this.contentEditable === "true") {
-        $this.attr("contentEditable", "inherit").trigger("cardeditstop");
+        value = $this.html();
+        $this
+          .attr("contentEditable", "inherit")
+          .formatCardText(value)
+          .trigger("cardeditstop");
+        TASKBOARD.data.save()
       }
     });
 
@@ -158,7 +176,7 @@ TASKBOARD.init.adding = function () {
   $board.bind("sortbeforestop", function(ev, ui) {
     if (ui.item.hasClass('new')) {
       ui.item.removeClass('new')
-        .find(".text").html("<p><em>Double-click to edit</em> <span class='tag'>#new</span></p>");
+        .find(".text").formatCardText("<p><em>Double-click to edit</em> #new</p>");
     }
   });
 
@@ -167,17 +185,6 @@ TASKBOARD.init.adding = function () {
 TASKBOARD.init.initializers.push(TASKBOARD.init.adding );
 
 /* Tagging cards */
-
-TASKBOARD.tags = {};
-
-TASKBOARD.tags.markTags = function (text) {
-  /* turn #tags into nice spans */
-  return text.replace(/(\s|^|>)(#\w*)\b/gi, "$1<span class='tag'>$2</span>");
-};
-
-TASKBOARD.tags.unmarkTags = function (text) {
-  return text.replace(/<span\sclass=['"]tag['"]\s*>(#\w*)<\/span>/gi, "$1");
-};
 
 TASKBOARD.init.tagging = function () {
 
@@ -208,16 +215,16 @@ TASKBOARD.init.tagging = function () {
       "cardeditstart": function(ev) {
        $board.removeClass("highlighted")
           .find(".highlighted, .clicked").removeClass("highlighted clicked");
-        $(ev.target).html(function(i, html){ return TASKBOARD.tags.unmarkTags(html); });
-      },
-      "cardeditstop": function(ev) {
-        $(ev.target).html(function(i, html){ return TASKBOARD.tags.markTags(html); });
       },
       "sortbeforestop": function(ev, ui) {
         ui.item.css({ position:"", left: "", right: "", top: "", bottom: "" });
       }
-    })
-    .find(".card").trigger("cardeditstop");
+    });
+};
+
+TASKBOARD.formatCardText = function (text) {
+  /* turn #tags into nice spans */
+  return text.replace(/(\s|^|>)(#\w*)\b/gi, "$1<span class='tag'>$2</span>");
 };
 
 TASKBOARD.init.initializers.push(TASKBOARD.init.tagging );
@@ -237,6 +244,42 @@ TASKBOARD.templates = {
 /* Data */
 
 TASKBOARD.data = {};
+
+TASKBOARD.data.save = function () {
+  localStorage.setItem('board', TASKBOARD.data.boardToJSON( $board ));
+};
+
+TASKBOARD.data.clear = function () {
+  localStorage.clear();
+  window.location = window.location;
+};
+
+TASKBOARD.data.load = function () {
+  var stored = localStorage.getItem('board');
+  return stored ? JSON.parse(stored) : TASKBOARD.data.dummy;
+};
+
+// quick and dirty way to store board changes:
+// go through every single card on every change
+TASKBOARD.data.boardToJSON = function ($board) {
+  var data = { columns: [] };
+
+  $board.columns().slice(0,-1).each(function () {
+    var $column = $(this),
+        column = { cards: [] };
+    $column.find(".card").each(function () {
+      var $card = $(this),
+          card = {
+            type: $.trim(this.className.replace("card", "")),
+            text: $card.find(".text").data("value")
+          };
+      column.cards.push(card);
+    });
+    data.columns.push(column);
+  });
+
+  return JSON.stringify(data);
+};
 
 TASKBOARD.data.dummy = {
   columns: [
@@ -290,7 +333,7 @@ TASKBOARD.data.dummy = {
     }
   ]
 
-}
+};
 
 /**
  * UTILS
