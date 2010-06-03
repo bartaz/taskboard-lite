@@ -89,6 +89,25 @@ TASKBOARD.init.sorting = function () {
 
 TASKBOARD.init.initializers.push( TASKBOARD.init.sorting );
 
+// evil hack for webkit forcing text cursor on drag
+// disables text selection in draggables and only allows it in cards' text
+if ($.browser.safari) {
+  $.ui.mouse.prototype.__mouseDown = $.ui.mouse.prototype._mouseDown;
+  $.ui.mouse.prototype._mouseDown = function(event){
+    if ($(event.target).closest(".text").length == 0) {
+      document.onselectstart = function () { return false };
+    }
+    return $.ui.mouse.prototype.__mouseDown.apply(this, arguments);
+  }
+
+  $.ui.mouse.prototype.__mouseUp = $.ui.mouse.prototype._mouseUp;
+  $.ui.mouse.prototype._mouseUp = function(event){
+    document.onselectstart = function () { return true };
+    return $.ui.mouse.prototype.__mouseUp.apply(this, arguments);
+  }
+}
+
+
 /* Editing cards */
 
 $.fn.formatCardText = function (text) {
