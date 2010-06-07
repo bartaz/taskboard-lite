@@ -169,6 +169,30 @@ section, nav, article, aside, hgroup, header, footer { display: block }
     font-size: 0.9em;
   }
 
+.card { position: relative; padding: 7px; }
+.actions { position: absolute; top: -8px; right: 0px; }
+
+.actions li {
+  display: block;
+  height: 16px;
+  width: 16px;
+  float: left;
+  margin-left: 4px;
+  cursor: pointer;
+  background: no-repeat top center;
+}
+
+.actions li:hover {
+  position: relative; top: -2px; height: 18px;
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.actions li.changecolor { background-image: url(../img/color.png); }
+.actions li.edit { background-image: url(../img/pencil.png); }
+.actions li.delete { background-image: url(../img/cross.png); }
+
 /* Cards rotating CSS3 magic */
 
 .card {

@@ -40,6 +40,42 @@ TASKBOARD.build = function (data) {
 TASKBOARD.init.initializers.push( TASKBOARD.build );
 
 
+/* Default card and board events */
+
+TASKBOARD.init.events = function () {
+
+  $board
+    .bind("boardsave", function () {
+      TASKBOARD.data.save();
+    })
+    .delegate(".card", "cardchangecolor", function () {
+      var colorMap = {
+            'transparent': 'green',
+            'green': 'blue',
+            'blue': 'red',
+            'red': 'orange',
+            'orange': 'yellow',
+            'yellow': 'transparent'
+          },
+          color = this.className.match(/\b(transparent)|(green)|(blue)|(red)|(orange)|(yellow)\b/);
+      if (color) {
+        color = color[0];
+        $(this).removeClass(color).addClass(colorMap[color]);
+        $board.trigger("boardsave");
+      }
+    })
+    .delegate(".card", "carddelete", function () {
+      if (confirm("Are you sure you want to delete card?")) {
+        $(this).fadeOut(function(){
+          $(this).remove();
+          $board.trigger("boardsave");
+        });
+      }
+    });
+};
+
+TASKBOARD.init.initializers.push( TASKBOARD.init.events );
+
 /* Sorting cards */
 
 $.fn.columns = function () {
@@ -78,7 +114,7 @@ TASKBOARD.init.sorting = function () {
           }
         }
         $board.updateSize();
-        TASKBOARD.data.save();
+        $board.trigger("boardsave");
       }
     })
     .append(TASKBOARD.templates.column)
@@ -138,7 +174,7 @@ TASKBOARD.init.editing = function () {
           .attr("contentEditable", "inherit")
           .formatCardText(value)
           .trigger("cardeditstop");
-        TASKBOARD.data.save()
+        $board.trigger("boardsave");
       }
     });
 
@@ -247,6 +283,26 @@ TASKBOARD.formatCardText = function (text) {
 };
 
 TASKBOARD.init.initializers.push(TASKBOARD.init.tagging );
+
+
+/* Actions */
+
+TASKBOARD.init.actions = function () {
+  var actions = $("<ul class='actions'><li class='changecolor'></li><li class='delete'></li></ul>");
+
+  $board.delegate(".card", "hover", function (ev) {
+    if(/^mouse(enter|over)/i.test(ev.type)){
+      $(this).append(actions);
+    } else {
+      actions.detach();
+    }
+  })
+  .delegate(".actions li", "click", function () {
+    $(this).closest(".card").trigger("card" + this.className);
+  })
+};
+
+TASKBOARD.init.initializers.push(TASKBOARD.init.actions);
 
 /* Templates */
 
