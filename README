@@ -1,13 +1,18 @@
-Taskboard Lite
-================
+Taskboard 10k
+===============
 
-Light-weight client-side task-board (my HTML5, CSS3 and JavaScript playground)
+This is a 10kB version of Taskboard-Lite prepared for 10k Apart contest.
+Available online at http://10k.aneventapart.com/Entry/303
+
+DESCRIPTION
+-------------
+
+Taskboard 10k is a light-weight on-line whiteboard for your task and notes about life, the universe and everything.
+It's easy to use like a fridge door with sticky notes.
 
 
-Inspired by:
+LICENSE
+---------
 
-  * Cognifide's Taskboard (http://taskboard.cognifide.com)
-  * StickyScreen (http://www.stickyscreen.org/)
-
-Icons taken from Fugue Icon set by Yusuke Kamiyamane http://p.yusukekamiyamane.com
+Copyright 2010 Bartek Szopka. Released under MIT License.
 
