@@ -356,7 +356,7 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
     // loading data from storage (or using some dummy cards)
     data = storage.getItem(STORAGE_KEY);
     data = data ? JSON.parse(data) : [
-        { type: COLORS[0], text: "<p><i>Welcome to</i></p><h2>Taskboard 10k</h2>", top: 40, left: 70 },
+        { type: COLORS[0], text: "<p><i>Welcome to</i></p><h2>Taskboard Lite</h2>", top: 40, left: 70 },
         { type: COLORS[5], text: tip(), top: 120, left: 80 },
         { type: COLORS[1], text: "<p><b>Have fun!</b></p>", top: 180, left: 90 }
     ];
