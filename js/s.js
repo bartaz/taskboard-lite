@@ -156,13 +156,13 @@ var HTML_CARD = "<section class=card><div class=text>",
         "Need a new card? Just grab it from a deck on the left",
         "Move cards around to arrange them in any way you want: todo list? kanban board?",
         "Double-click card to edit",
-        "You can use hotkeys when editing text, just check <i>Ctrl+I</i> or <b>Ctrl+B</b>",
+        "You can use hotkeys when editing text, just check <i>Ctrl+I</i> or <b>Ctrl+B</b>!",
         //"Just guess what <i>ESC</i> and <i>Ctrl+S</i> do", -- let them discover it... cause Ctrl+S is not working in IE9
         "Every change is immediately saved in your browser",
         "You've already noticed #tags, didn't you?",
         "<i>Ctrl+H</i> makes a</p><h2>Heading</h2><p>and <i>Ctrl+G</i> turns text into a paragraph",
         0, // pause
-        "It's not a tip... I just had some spare bytes below 10k limit ;)"
+        "It's not a tip... I just have some spare bytes below 10k limit ;)"
     ],
 
 // Now, these down there can be finally called variables
