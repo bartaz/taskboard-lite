@@ -1,25 +1,6 @@
 /*
- * Hai!
- *
- * This is a script that makes Taskboard 10k awesome ;)
+ * This is a script that makes Taskboard Lite awesome ;)
  * At least it's my very humble opinion.
- *
- * So, you want to know how it was all done?
- * Great! But make sure you are brave enough to go down into dungerons
- * of this script. There is a lot of magic down there.
- *
- * Really. This whole thing had to fit into 10k limit, so not very best
- * JavaScript programming practices were used in some places. And it is
- * very likely that there are pieces of code that will be not easy to 
- * decypher.
- *
- * So you still want to move forward?
- *
- * You were warned ;)
- *
- * ====================================================================
- *
- *
  */
 
 (function (document, $, storage) { // let's pull all of this into context of nice function
@@ -86,8 +67,7 @@ var HTML_CARD = "<section class=card><div class=text>",
         // clears board by removing saved data & reloads the page
         r: function () {
             if (confirm("Are you sure you want to clear all saved data?")) {
-                storage.removeItem(STORAGE_KEY); // .clear() would be fine too, but I don't want to remove
-                                                 // data of other demos on 10k apart domain :)
+                storage.removeItem(STORAGE_KEY); // .clear() would be fine too
                 location.reload();
             }
         },
@@ -97,8 +77,6 @@ var HTML_CARD = "<section class=card><div class=text>",
         // edit
         e: function ($card) {
             $card[DBLCLICK](); // hacky way of saying .trigger("dblclick"),
-                               // because dblclick launches edit mode
-                               // see line 484 where it is handled
         },
         
         // change color, by switching to next color from the list
@@ -107,9 +85,7 @@ var HTML_CARD = "<section class=card><div class=text>",
         c: function ($card) {
             var color = $card.color();
             if (color) {
-                $card.rC(color); // .removeClass -- I guess this is the first place I use my short alias
-                                 //                 you will find more about that around line 359 where
-                                 //                 they are defined 
+                $card.rC(color); // .removeClass
                 color = COLORS.indexOf(color);
                 color = COLORS[++color < 6 ? color : 0]; // 6 is COLORS.length
                 $card.aC(color); // .addClass
@@ -162,7 +138,7 @@ var HTML_CARD = "<section class=card><div class=text>",
         "You've already noticed #tags, didn't you?",
         "<i>Ctrl+H</i> makes a</p><h2>Heading</h2><p>and <i>Ctrl+G</i> turns text into a paragraph",
         0, // pause
-        "It's not a tip... I just have some spare bytes below 10k limit ;)"
+        "No more tips... you are on your own now ;)"
     ],
 
 // Now, these down there can be finally called variables
@@ -246,7 +222,6 @@ function save() {
 //   actions -- is an array of action definitions, where first element of each
 //              action definition is a class name (action alias) and the second
 //              one is a title to display in tooltip
-//              ... just look at line 403 and you will know what I mean ;)
 function buildActions(actions) {
     var menu = $("<menu>");
     $.each(actions, function (i, action) {
@@ -341,7 +316,6 @@ $.fn.extend({
                 text.replace(/(\s|^|>)(#\w*)(\b)/gi, "$1<span class=tag>$2</span>$3")   // #tags
 
                     // parsing and making links clickable is done with *VERY* basic regexp
-                    // 'cause something more sophisticated would not fit into 10k...
                     // so fingers crossed that it will not cause problems ;)
                     //
                     // one of the problems -- &nbsp; may break link parsing
@@ -563,15 +537,3 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
 
 })(document, jQuery, localStorage);
 
-/*
- * I really cannot believe you've done it, all the way down here.
- * You are very brave!
- *
- * But that's really it. There is nothing more.
- *
- * I hope you enjoyed it at least a little bit.
- * Probably you did, if you are still here :)
- *
- * I need to go now, because my wife is going to hate me
- * for all these evenings and nights I did spend here ;)
- */
