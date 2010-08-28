@@ -1,14 +1,27 @@
-Taskboard 10k
-===============
-
-This is a 10kB version of Taskboard-Lite prepared for 10k Apart contest.
-Available online at http://10k.aneventapart.com/Entry/303
-
-DESCRIPTION
--------------
+Taskboard Lite
+================
 
 Taskboard 10k is a light-weight on-line whiteboard for your task and notes about life, the universe and everything.
 It's easy to use like a fridge door with sticky notes.
+
+You like to get things done? - Use it as a colorful todo list.
+
+Are you an agile enthusiast? - Turn in into kanban or scrum board.
+
+
+Inspired by:
+
+  * Cognifide's Taskboard (http://taskboard.cognifide.com)
+  * StickyScreen (http://www.stickyscreen.org/)
+
+Icons taken from Fugue Icon set by Yusuke Kamiyamane http://p.yusukekamiyamane.com
+
+
+10k Apart
+-----------
+
+Basic version of Taskboard Lite packed into 10k bytes was submitted as Taskboard 10k to 10k Apart contest.
+This version is available in `10k` branch: http://github.com/bartaz/taskboard-lite/tree/10k
 
 
 LICENSE
