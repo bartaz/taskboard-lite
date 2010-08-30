@@ -24,6 +24,8 @@
  *
  * -- Footer              [footer]
  *
+ * -- Navigation tabs     [nav]
+ *
  */
 
 
@@ -33,13 +35,13 @@
  */
 
 html, body,
-section, aside, menu, footer,
+section, aside, menu, footer, nav,
 div, h2, p, ul, li,
 span, a { margin: 0; padding: 0 }
 
 ul, li { list-style: none }
 
-section, aside, menu, footer { display: block } /* -- make sure HTML5 elements are blocks */
+section, aside, menu, footer, nav { display: block } /* -- make sure HTML5 elements are blocks */
 
 body { font-family: georgia, times, serif; }
 
@@ -287,4 +289,61 @@ footer {
 }
 
 footer:hover { opacity: 1 }
+
+/*
+ * Navigation tabs
+ * =================
+ */
+
+nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+
+    border-top: 5px solid #333;
+
+    -moz-box-shadow:    3px 3px 5px rgba(0,0,0,.2);
+    -webkit-box-shadow: 3px 3px 5px rgba(0,0,0,.2);
+    box-shadow:         3px 3px 5px rgba(0,0,0,.2);
+
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+nav ul { position: absolute; top: 0; right: 5px; }
+
+nav li {
+    float: left;
+    padding: 4px;
+    margin: 0 5px 5px 0;
+    border: 1px solid #AAA;
+    border-top: none;
+
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-bottom-right-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+
+    background: #DDD;
+    background: -moz-linear-gradient(-90deg, #AAA, #DDD 18%);
+    background: -webkit-gradient(linear, left top, left bottom, from(#AAA), color-stop(18%, #DDD));
+    -moz-box-shadow:    1px 1px 5px rgba(0,0,0,.2);
+    -webkit-box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+    box-shadow:         1px 1px 5px rgba(0,0,0,.2);
+}
+
+nav li:hover { padding-top: 6px; }
+
+nav li.current {
+    padding: 4px 6px 6px;
+
+    background: #333;
+    border-color: #333;
+    color: #EEE;
+
+    -moz-box-shadow:    3px 3px 5px rgba(0,0,0,.2);
+    -webkit-box-shadow: 3px 3px 5px rgba(0,0,0,.2);
+    box-shadow:         3px 3px 5px rgba(0,0,0,.2);
+}
 

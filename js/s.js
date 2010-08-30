@@ -361,6 +361,9 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
         { type: COLORS[1], text: "<p><b>Have fun!</b></p>", top: 180, left: 90 }
     ];
 
+    // TODO: load multiple boards into tabs
+    $("<nav><ul><li class=current>Taskboard</ul></nav>").to($body);
+
     // building the board
     $board = $("<section id=board>").to($body);
 
