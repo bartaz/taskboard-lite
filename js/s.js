@@ -105,7 +105,7 @@ var HTML_CARD = "<section class=card><div class=text>",
 
         // TEXT FORMATTING
         
-        // bold -- yes, you guesed it right ;)
+        // bold -- yes, you guessed it right ;)
         b: function () {
             document.execCommand("bold", FALSE, "");
         },
@@ -516,7 +516,7 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
         });
 
 // We are almost at the end of out journey.
-// Last but not least, the event binded to the document itself.
+// Last but not least, the event bound to the document itself.
 
     $document
         // when clicked somewhere on the page close edit mode and unselect all cards
