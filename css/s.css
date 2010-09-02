@@ -87,7 +87,7 @@ a { outline: 0; color: #05C; }
 .green  { background: #8C4; border-color: #9D6 }
 
 /*
--- previous colour pallettes
+-- previous colour palettes
 
 -- vivid palette
 
@@ -204,7 +204,7 @@ a { outline: 0; color: #05C; }
     box-shadow: inset 1px 1px 1px rgba(0,0,0,.2);
 }
 
-/* -- make tags on white cards noticable */
+/* -- make tags on white cards noticeable */
 .white .tag       { background: #EEE }
 .white .tag.hover,
 .white .tag.mark  { background: #DDD }
