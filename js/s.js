@@ -97,6 +97,7 @@ var HTML_CARD = "<section class=card><div class=text>",
         d: function ($card) {
             if (confirm("Are you sure you want to delete this card?")) {
                 $card.fadeOut(function () {
+                    $actions.detach();
                     $card.remove();
                     save();
                 });
