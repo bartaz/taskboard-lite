@@ -4,6 +4,9 @@ var TASKBOARD = {},
     $board = $("#board");
 
 $(document).ready(function(){
+  syncer.display('remotestorage-connect', ['tasks'], 'syncer/', function(e) {
+    TASKBOARD.build();
+  });
   TASKBOARD.init();
 });
 
@@ -321,16 +324,11 @@ TASKBOARD.templates = {
 TASKBOARD.data = {};
 
 TASKBOARD.data.save = function () {
-  localStorage.setItem('board', TASKBOARD.data.boardToJSON( $board ));
-};
-
-TASKBOARD.data.clear = function () {
-  localStorage.clear();
-  window.location = window.location;
+  syncer.setItem('tasks', 'board', TASKBOARD.data.boardToJSON( $board ));
 };
 
 TASKBOARD.data.load = function () {
-  var stored = localStorage.getItem('board');
+  var stored = syncer.getItem('tasks', 'board');
   return stored ? JSON.parse(stored) : TASKBOARD.data.dummy;
 };
 
