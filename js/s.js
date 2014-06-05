@@ -124,6 +124,31 @@ var HTML_CARD = "<section class=card><div class=text>",
         // paragraph
         p: function () {
             block("h2", "p");
+        },
+
+        // save
+        s: function() {
+            var jsondata = localStorage.getItem('board').toString();
+            jsondata = window.btoa(encodeURIComponent(escape(jsondata)));
+            var uri = 'data:text/plain;charset=utf-8;base64,' + jsondata;
+            var downloadLink = document.createElement("a");
+            downloadLink.href = uri;
+            downloadLink.download = "board.txt";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        },
+
+        // load
+        l: function() {
+            jQuery('#import').click();
+            // var input = document.createElement("input");
+            // input.setAttribute("id", "import");
+            // input.setAttribute("type", "file");
+            // input.onchange = loadFile;
+            // document.body.appendChild(input);
+            // input.click();
+            // document.body.removeChild(input);
         }
 
     },
@@ -381,7 +406,7 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
                              ["h", "Heading (Ctrl+H)"],
                              ["p", "Paragraph (Ctrl+R)"]]).aC(EDIT); // .addClass
 
-    buildActions([["r", "Clear board"]]).to($body);
+    buildActions([["r", "Clear board"], ["s", "Save"], ["l", "Load"]]).to($body);
 
     // preparing deck with new cards
     $deck = $("<aside id=deck>").to($body)
@@ -531,10 +556,29 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
                 $(DOT + MARK).rC(MARK).drop(); // .removeClass
             }
         });
+    var fileHandler = function(e2) {       
+        var rawdata = e2.target.result;
+        var jsondata = unescape(decodeURIComponent(rawdata));
+        console.log(jsondata);
+        console.log('loading... ' + jsondata.length);
+        localStorage.setItem('board', jsondata);
+        location.reload();
+    };
+
+    var loadFile = function(e1) {
+        var cnfm = confirm("Import will dicard all the cards");
+        if (cnfm) {
+            var file = e1.target.files[0];
+            var fr = new FileReader();
+            fr.onload = fileHandler;
+            fr.readAsText(file, 'utf-8');
+        }
+    }
+
+    jQuery("#import").change(loadFile);
 
 });
 
 // And that's all folks!
 
 })(document, jQuery, localStorage);
-
