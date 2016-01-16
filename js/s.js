@@ -73,12 +73,12 @@ var HTML_CARD = "<section class=card><div class=text>",
         },
 
         // CARD ACTIONS
-        
+
         // edit
         e: function ($card) {
             $card[DBLCLICK](); // hacky way of saying .trigger("dblclick"),
         },
-        
+
         // change color, by switching to next color from the list
         // 'cause color pickers are so unusable...
         // and, anyway, there are only six colors, right?
@@ -92,7 +92,7 @@ var HTML_CARD = "<section class=card><div class=text>",
                 save();
             }
         },
-        
+
         // delete
         d: function ($card) {
             if (confirm("Are you sure you want to delete this card?")) {
@@ -105,22 +105,22 @@ var HTML_CARD = "<section class=card><div class=text>",
         },
 
         // TEXT FORMATTING
-        
+
         // bold -- yes, you guessed it right ;)
         b: function () {
             document.execCommand("bold", FALSE, "");
         },
-        
+
         // italic
         i: function () {
             document.execCommand("italic", FALSE, "");
         },
-        
+
         // heading
         h: function () {
             block("p", "h2");
         },
-        
+
         // paragraph
         p: function () {
             block("h2", "p");
@@ -151,7 +151,7 @@ var HTML_CARD = "<section class=card><div class=text>",
     // jQuery objects with application elements
     $document = $(document),
     $body = $(document.body),
-    
+
     $board,   // <section id=board> -- contains all the cards added by user
     $deck,    // <aside id=deck>    -- contains set of new cards to take
     $actions, // <menu>             -- toolbar with card actions
@@ -208,7 +208,7 @@ function tags(text) {
 function save() {
     var cards = [],
         $card; // used in .each loop, but it saves one 'var' statement
-    
+
     $board.$(CARD).each(function () {
         $card = $(this);
         cards.push($.extend($card.offset(), {
@@ -241,7 +241,7 @@ function buildActions(actions) {
 //   cancel - if true, discards the changes
 function closeEdit(cancel) {
     var $card = $board.$(CARD + DOT + EDIT).eq(0), value;
-    
+
     $editbar.detach();
 
     $body.add($card.drop()).rC(EDIT); // .removeClass
@@ -284,10 +284,10 @@ $.each([PICK, "drop"], function (i, name) {
     function offset(i, value) {
         return parseInt(value, 10) + (pick ? -5 : 5);
     }
-    
+
     $.fn[name] = function () {
         return this.each(function ($this) {
-            $this = $(this);
+            $this = $(this).to($board);
             if ($this.hC(PICK) != pick) { // .hasClass
                 $this.tC(PICK, pick).css(TOP, offset).css(LEFT, offset); // .toggleClass
             }
@@ -402,14 +402,14 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
                     .saveText(tip())
                     .to($board)
                     .trigger(event);   // start dragging new card
-                
+
                 $card.hide();             // hide deck card
                 setTimeout(function () {  // and show it again after a while
                     $card.css(LEFT, -40).show().move(0);
                 }, 1000);
             }
         });
-    
+
     // add a card to the deck for each color
     $.each(COLORS, function (i, color) {
         i = 6 - i; // 6 is COLORS.length
@@ -429,9 +429,9 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
         .dlg(CARD, MOUSEDOWN, function (mouseDownEvent) {
             // don't drag in edit mode or if a tag or action is clicked on a card
             if (!$body.hC(EDIT) && !$(mouseDownEvent.target).is(TAG + "," + ACTION)) { // .hasClass
-                var $card = $(this).to($board),
+                var $card = $(this),
                     offset = $card.offset();
-                
+
                 $document
                     .bind(MOUSEMOVE, function (moveEvent) {
                         // pick a card and move it around
@@ -439,7 +439,7 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
                             .css(LEFT, offset[LEFT] + moveEvent.pageX - mouseDownEvent.pageX)
                             .css(TOP,  offset[TOP]  + moveEvent.pageY - mouseDownEvent.pageY);
                     });
-                
+
                 return FALSE; // and don't select text, please
             }
         })
@@ -458,22 +458,23 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
         // on dblclick start editing card text
         .dlg(CARD, DBLCLICK, function (event) {
             // don't start editing if a tag or action was clicked
+
             if (!$(event.target).is(TAG + "," + ACTION)) {
                 var $card = $(this),
                     $text = $card.$(TEXT),
                     value = $card.data(VALUE);
-                
+
                 if ($text[0][CONTENTEDITABLE] != TRUE) {
                     $document[CLICK](); // trigger document click to unselect cards
                                         // check line 549 to see what it does
                     $body.add($card.pick().rC(MARK)).aC(EDIT); // .addClass
                     $editbar.to($card);
-                    
+
                     $text
                         .html(value)
                         .attr(CONTENTEDITABLE, TRUE)
                         .focus();
-                    
+
                     $document.bind(KEYDOWN, function (keyEvent) { // bind hot-keys listener
                             if (keyEvent.which == 27) { // ESC pressed - cancel edit
                                 closeEdit(TRUE);
@@ -494,7 +495,7 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
                 $actions.detach();
             }
         })
-        
+
         // TAG EVENTS
         // on hover highlight all tags with same text
         .dlg(TAG, HOVER, function (event) {
@@ -504,7 +505,7 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
         // on click select all cards with same tags
         .dlg(TAG, CLICK, function ($cards) { // var as param
             $cards = tags($(this).text()).tC(MARK).up(CARD); // .toggleClass
-            
+
             if ($(this).hC(MARK)) { // .hasClass
                 // tags were selected, so highlight tagged cards
                 $cards.pick()
@@ -537,4 +538,3 @@ $(function () { // $(document).ready() -- theoretically not needed, as we don't 
 // And that's all folks!
 
 })(document, jQuery, localStorage);
-
