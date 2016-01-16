@@ -1,0 +1,88 @@
+
+Taskboard 10k
+
+Author: Bartek Szopka <bartek.szopka+10k@gmail.com>
+Date:   2010.08.24
+=====================================================
+
+
+DESCRIPTION
+=============
+
+Taskboard 10k is a light-weight on-line whiteboard for your task and notes about life, the universe and everything.
+It's easy to use like a fridge door with sticky notes.
+
+You like to get things done? - Use it as a colorful todo list.
+
+Are you an agile enthusiast? - Turn in into kanban or scrum board.
+
+
+Inspired by:
+
+  * Cognifide's Taskboard (http://taskboard.cognifide.com)
+  * StickyScreen (http://www.stickyscreen.org/)
+
+Icons taken from Fugue Icon set by Yusuke Kamiyamane http://p.yusukekamiyamane.com
+
+
+CONTENTS OF THE PACKAGE
+=========================
+
+    css\s.css   - style sheet (minified)
+    img\i.png   - icons
+    js\s.js     - script (minified)
+    index.html  - HTML (minified)
+    src\        - full, non-minified, commented source files -- if anyone is brave enough to read them ;)
+    README      - this file
+
+MINIFICATION
+==============
+
+Style-sheet (css\s.css) and script (js\s.js) were minified using YUI Compressor (2.4.2), with default settings.
+HTML (index.html) was minified using HTML Compressor (0.9.1) with remove-intertag-spaces and remove-quotes options
+
+   Google Closure Compiler was considered as a minifier for script, but as it assumes gzip
+   compression it creates bigger file size (by inlining constant strings, etc).
+   That was a nice lesson learned!
+
+Icons sprite file was optimized using PngOptimizer 1.8.
+
+Final minified file sizes
+---------------------------
+
+    css\s.css    2820
+    img\i.png    1648
+    js\s.js      5289
+    index.html    441
+    -----------------
+                10198
+                 + 42  (just a coincidence?)
+               ======
+                10240
+
+
+BROWSERS
+====================
+
+Taskboard 10k was developed on Chromium 6 and Firefox 3.6 (Ubuntu 10.4)
+
+Tested using following browsers
+---------------------------------
+
+IE9 Platform Preview 4   (Windows 7)
+    -- small rendering issues of card shadows during animations or drag & drop
+    -- tiny issues with unexpected mousemove events being triggered on mousedown
+    -- Ctrl+P hotkey was changed to Ctrl+G (as printing is not prevented by returning false)
+    -- Ctrl+S hotkey is not working (cannot prevent opening save dialog)
+
+Firefox 3.6              (Windows XP, Ubuntu 10.4)
+    -- workaround was needed as 'formatblock' command was not working
+
+Chrome 5 + Chromium 6    (Windows XP, Ubuntu 10.4)
+    -- inset shadow not used on tags because of rendering problems
+
+Safari 5                 (Windows XP)
+
+Opera 10.6               (Windows XP, Ubuntu 10.4)
+    -- Ctrl+* hotkeys are not working
+
