@@ -48,7 +48,7 @@ var HTML_CARD = "<section class=card><div class=text>",
     TOP  = "top",
     LEFT = "left",
 
-    STORAGE_KEY = "board",
+    STORAGE_KEY = "taskboard-lite-board",
 
     TRUE  = !0 + "", // == "true"  //  little inconsistency, but I use "true" only as a string
     FALSE = !1,      // == false   //  and false more as boolean
